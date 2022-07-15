@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <io.h>
+#include <stddef.h>
 
 void outb(uint16_t port, uint8_t val)
 {
@@ -42,15 +43,19 @@ void io_wait(void)
     asm volatile ("outb %%al, $0x80" : : "a"(0));
 }
 
-void memcpy(uint8_t *dest, const uint8_t *src, uint32_t len)
+void *memcpy (void *dest, const void *src, size_t len)
 {
-    const uint8_t *sp = (const uint8_t *)src;
-    uint8_t *dp = (uint8_t *)dest;
-    for(; len != 0; len--) *dp++ = *sp++;
+  char *d = dest;
+  const char *s = src;
+  while (len--)
+    *d++ = *s++;
+  return dest;
 }
 
-void memset(uint8_t *dest, uint8_t val, uint32_t len)
+void *memset (void *dest, int val, size_t len)
 {
-    uint8_t *temp = (uint8_t *)dest;
-    for ( ; len != 0; len--) *temp++ = val;
+  unsigned char *ptr = dest;
+  while (len-- > 0)
+    *ptr++ = val;
+  return dest;
 }
