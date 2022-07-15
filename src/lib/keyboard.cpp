@@ -85,13 +85,12 @@ void input(unsigned int input_length, char *theinput)
             if (position != 0) {
                 theinput[position] = 0;
                 position--;
-                terminal::putchar(character);
             }
         } else if (position != last_position) {
             if (character != '\n') theinput[position] = character;
             position++;
-            terminal::putchar(character);
         }
+        if((position == 0 && character != '\b') || (position != last_position || character == '\n')) terminal::putchar(character);
     }
 }
 } // namespace keyboard
