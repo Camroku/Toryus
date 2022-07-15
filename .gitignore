@@ -1,4 +1,4 @@
-src/Arus.iso
+src/Toryus.iso
 src/*.o
-src/iso/boot/arus.bin
+src/iso/boot/toryus.bin
 .idea/*
