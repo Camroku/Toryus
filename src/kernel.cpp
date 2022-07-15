@@ -19,12 +19,22 @@ extern "C" void kernel_main(void)
   terminal::initialize();
 
   // Toryus logo
-  terminal::setcolor(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_BLACK);
+  terminal::setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
   terminal::print(
     "                ##                \n"
-    "              ##  ##     #######  \n"
-    "            ##      ##  #    #  # \n"
-    "          ##          ###     ### \n"
+    "              ##  ##     ####");
+  terminal::setcolor(VGA_COLOR_GREEN, VGA_COLOR_BLACK);
+  terminal::print("###  \n");
+  terminal::setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+  terminal::print("            ##      ##  #    ");
+  terminal::setcolor(VGA_COLOR_GREEN, VGA_COLOR_BLACK);
+  terminal::print("#### \n");
+  terminal::setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+  terminal::print("          ##          ###     ");
+  terminal::setcolor(VGA_COLOR_GREEN, VGA_COLOR_BLACK);
+  terminal::print("### \n");
+  terminal::setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+  terminal::print(
     "        ##              ##     #  \n"
     "      ##                  #####   \n"
     "    ##                      ##    \n"
