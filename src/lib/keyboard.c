@@ -5,10 +5,15 @@
 #include <serial.h>
 #include <stdbool.h>
 
-bool ginput = false;
 char lastchar = 0;
 bool gotchar = false;
 unsigned char scancode;
+bool shift = false;
+bool caps = false;
+bool ctrl = false;
+unsigned char shifts[12] = {
+    '!', '@', '#', '$', '%', '^', '&', '*', '(', ')'
+};
 
 unsigned char keyboard_us[128] =
 {
@@ -39,20 +44,98 @@ unsigned char keyboard_us[128] =
     0,	// All other keys are undefined
 };
 
+char scancodetoascii(unsigned char scancode)
+{
+    if (scancode < 0x80)
+    {
+        if (ctrl)
+        {
+            return keyboard_us[scancode] - 'a' + 1;
+        }
+        else if (caps)
+        {
+            if (keyboard_us[scancode] <= 'z' && keyboard_us[scancode] >= 'a')
+                return keyboard_us[scancode] + 'A' - 'a';
+            else if (keyboard_us[scancode] <= 'Z' && keyboard_us[scancode] >= 'A')
+                return keyboard_us[scancode] - 'A' + 'a';
+            else
+                return keyboard_us[scancode];
+        }
+        else if (shift)
+        {
+            if (keyboard_us[scancode] <= 'z' && keyboard_us[scancode] >= 'a')
+                return keyboard_us[scancode] + 'A' - 'a';
+            else if (keyboard_us[scancode] <= 'Z' && keyboard_us[scancode] >= 'A')
+                return keyboard_us[scancode] - 'A' + 'a';
+            else if (keyboard_us[scancode] <= '9' && keyboard_us[scancode] >= '0')
+                return shifts[scancode - 2];
+            else if (keyboard_us[scancode] == ',')
+                return '<';
+            else if (keyboard_us[scancode] == '.')
+                return '>';
+            else if (keyboard_us[scancode] == '/')
+                return '?';
+            else if (keyboard_us[scancode] == '`')
+                return '~';
+            else if (keyboard_us[scancode] == '-')
+                return '_';
+            else if (keyboard_us[scancode] == '=')
+                return '+';
+            else if (keyboard_us[scancode] == '[')
+                return '{';
+            else if (keyboard_us[scancode] == ']')
+                return '}';
+            else if (keyboard_us[scancode] == '\\')
+                return '|';
+            else if (keyboard_us[scancode] == ';')
+                return ':';
+            else if (keyboard_us[scancode] == '\'')
+                return '"';
+            else
+                return keyboard_us[scancode];
+        }
+        else
+        {
+            return keyboard_us[scancode];
+        }
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 static void keyboard_handler(registers_t *regs)
 {
     (void)regs; // `regs` is not used
     scancode = inb(0x60);
-    if (ginput) {
-        if (scancode & 0x80)
+    if (scancode > 0x80)
+    {
+        if ((scancode - 0x80) == 42 || (scancode - 0x80) == 54)
         {
-            // A key was released, do nothing for now.
+            shift = false;
         }
-        else
+        else if ((scancode - 0x80) == 29)
         {
-            lastchar = keyboard_us[scancode];
-            gotchar = true;
+            ctrl = false;
         }
+    }
+    else
+    {
+        if (scancode == 42 || scancode == 54)
+        {
+            shift = true;
+        }
+        else if (scancode == 58)
+        {
+            caps = !caps;
+        }
+        else if (scancode == 29)
+        {
+            ctrl = true;
+        }
+        lastchar = scancodetoascii(scancode);
+        if (lastchar != 0) gotchar = true;
     }
 }
 
@@ -65,24 +148,27 @@ void keyboard_init(void)
 char keyboard_getchar()
 {
     lastchar = 0; // set last character to null character
-    ginput = true; // enable input
+    gotchar = false;
     while (gotchar == false) io_wait(); // wait until key press
-    ginput = false; // disable input
     gotchar = false; // set gotchar to false
     return lastchar; // return the character
 }
 
-void keyboard_input(unsigned int input_length, char *theinput)
+int keyboard_input(unsigned int input_length, char *theinput)
 {
     int last_position = input_length - 1;
     int position = 0;
     char character = 0;
     while (character != '\n') { // until the user presses enter
         character = keyboard_getchar();
+        if (character == 3) { // if the user presses ctrl-c
+            terminal_putchar(character);
+            return 1;
+        }
         if (character == '\b') {
             if (position != 0) {
-                theinput[position] = 0;
                 position--;
+                theinput[position] = 0;
                 terminal_putchar(character);
             }
         } else if (position != last_position) {
@@ -92,4 +178,5 @@ void keyboard_input(unsigned int input_length, char *theinput)
         }
         if(position == last_position && character == '\n') terminal_putchar(character);
     }
+    return 0;
 }

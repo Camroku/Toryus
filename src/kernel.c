@@ -75,12 +75,18 @@ void kernel_main(void)
   serial_log("knl", "Initialized");
   char theinput[129];
   char command[129];
+  int stat = 0;
   while (true)
   {
     memset(theinput, 0, 129);
     memset(command, 0, 129);
     terminal_print("$ ");
-    keyboard_input(128, theinput);
+    stat = keyboard_input(128, theinput);
+    if (stat == 1)
+    {
+      terminal_print("\n");
+      continue;
+    }
     get_until(command, theinput, ' ');
     if (strcmp(command, "clear") == 0)
     {

@@ -114,6 +114,11 @@ void terminal_putchar(char c) {
     cursor_x = 0;
     cursor_y++;
   }
+  else if (c >= 1 && c <= 31) 
+  {
+    terminal_putchar('^');
+    terminal_putchar(c + 'A' - 1);
+  }
   // Handle any other printable character.
   else if (c >= ' ') {
     location = buffer + (cursor_y * 80 + cursor_x);
