@@ -57,7 +57,7 @@ void kernel_main(void)
   terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
   terminal_print("Welcome to Toryus!\n");
   serial_log("pit", "Initializing");
-  timer_init(100);
+  timer_init(1000);
   serial_log("kbd", "Initializing");
   keyboard_init();
   serial_log("knl", "Initialized");

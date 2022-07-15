@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <io.h>
 #include <serial.h>
+#include <string.h>
 
 uint32_t tick = 0;
 
@@ -11,6 +12,11 @@ static void timer_callback(registers_t *regs)
 {
    (void)regs; // `regs` is not used
    tick++;
+}
+
+uint32_t timer_tick()
+{
+   return tick;
 }
 
 void timer_init(uint32_t frequency)
