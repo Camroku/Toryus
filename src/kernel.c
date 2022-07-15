@@ -6,6 +6,20 @@
 #include <timer.h>
 #include <keyboard.h>
 #include <serial.h>
+#include <string.h>
+#include <io.h>
+
+// Get the content until a seperator
+void get_until(char *dest, char *src, char sep)
+{
+    int i = 0;
+    while (src[i] != sep && src[i] != '\0')
+    {
+        dest[i] = src[i];
+        i++;
+    }
+    dest[i] = '\0';
+}
 
 /* Toryus Kernel main function */
 void kernel_main(void)
@@ -59,15 +73,32 @@ void kernel_main(void)
   serial_log("kbd", "Initializing");
   keyboard_init();
   serial_log("knl", "Initialized");
-  terminal_print("> ");
-  char theinput[25];
-  keyboard_input(24, theinput);
-  terminal_print("You said this: ");
-  terminal_print(theinput);
-  terminal_print("\nTest interrupt:\n");
-  asm volatile ("int $0x13");
-  for (;;){
-    asm volatile("hlt");
+  char theinput[129];
+  char command[129];
+  while (true)
+  {
+    memset(theinput, 0, 129);
+    memset(command, 0, 129);
+    terminal_print("$ ");
+    keyboard_input(128, theinput);
+    get_until(command, theinput, ' ');
+    if (strcmp(command, "clear") == 0)
+    {
+      terminal_clear();
+    } else if (strcmp(command, "echo") == 0)
+    {
+      terminal_print(theinput + 5);
+      terminal_print("\n");
+    } else if (strcmp(command, "help") == 0)
+    {
+      terminal_print("Available commands:\n");
+      terminal_print("  clear\n");
+      terminal_print("  echo <message>\n");
+      terminal_print("  help\n");
+    } else
+    {
+      terminal_print("Unknown command.\n");
+    }
   }
 }
 /*
