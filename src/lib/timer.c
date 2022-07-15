@@ -1,12 +1,10 @@
-#include <timer.hpp>
-#include <isr.hpp>
-#include <terminal.hpp>
+#include <timer.h>
+#include <isr.h>
+#include <terminal.h>
 #include <stdint.h>
-#include <io.hpp>
-#include <serial.hpp>
+#include <io.h>
+#include <serial.h>
 
-namespace timer
-{
 uint32_t tick = 0;
 
 static void timer_callback(registers_t *regs)
@@ -15,7 +13,7 @@ static void timer_callback(registers_t *regs)
    tick++;
 }
 
-void init(uint32_t frequency)
+void timer_init(uint32_t frequency)
 {
    // Firstly, register our timer callback.
    register_interrupt_handler(32, &timer_callback);
@@ -35,6 +33,5 @@ void init(uint32_t frequency)
    // Send the frequency divisor.
    outb(0x40, l);
    outb(0x40, h);
-   serial::log("pit", "Initialized");
+   serial_log("pit", "Initialized");
 }
-} // namespace timer

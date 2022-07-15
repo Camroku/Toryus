@@ -1,22 +1,22 @@
-#include <terminal.hpp>
-#include <isr.hpp>
-#include <io.hpp>
+#include <terminal.h>
+#include <isr.h>
+#include <io.h>
 
 isr_t interrupt_handlers[256];
 
-extern "C" void isr_handler(registers_t regs)
+void isr_handler(registers_t regs)
 {
-  terminal::print("recieved interrupt: ");
-  terminal::print_hex(regs.int_no);
+  terminal_print("recieved interrupt: ");
+  terminal_print_hex(regs.int_no);
   if (regs.err_code != 0) {
-    terminal::print(", errno: ");
-    terminal::print_hex(regs.err_code);
+    terminal_print(", errno: ");
+    terminal_print_hex(regs.err_code);
   }
-  terminal::print("\n");
+  terminal_print("\n");
   asm volatile ("cli");
 }
 
-extern "C" void irq_handler(registers_t regs)
+void irq_handler(registers_t regs)
 {
   if (regs.int_no >= 40)
   {

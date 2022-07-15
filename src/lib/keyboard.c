@@ -1,12 +1,10 @@
-#include <keyboard.hpp>
-#include <isr.hpp>
-#include <io.hpp>
-#include <terminal.hpp>
-#include <serial.hpp>
+#include <keyboard.h>
+#include <isr.h>
+#include <io.h>
+#include <terminal.h>
+#include <serial.h>
 #include <stdbool.h>
 
-namespace keyboard
-{
 bool ginput = false;
 char lastchar = 0;
 bool gotchar = false;
@@ -58,13 +56,13 @@ static void keyboard_handler(registers_t *regs)
     }
 }
 
-void init(void)
+void keyboard_init(void)
 {
    register_interrupt_handler(33, &keyboard_handler);
-   serial::log("kbd", "Initialized");
+   serial_log("kbd", "Initialized");
 }
 
-char getchar()
+char keyboard_getchar()
 {
     lastchar = 0; // set last character to null character
     ginput = true; // enable input
@@ -74,23 +72,24 @@ char getchar()
     return lastchar; // return the character
 }
 
-void input(unsigned int input_length, char *theinput)
+void keyboard_input(unsigned int input_length, char *theinput)
 {
     int last_position = input_length - 1;
     int position = 0;
     char character = 0;
     while (character != '\n') { // until the user presses enter
-        character = getchar();
+        character = keyboard_getchar();
         if (character == '\b') {
             if (position != 0) {
                 theinput[position] = 0;
                 position--;
+                terminal_putchar(character);
             }
         } else if (position != last_position) {
             if (character != '\n') theinput[position] = character;
             position++;
+            terminal_putchar(character);
         }
-        if((position == 0 && character != '\b') || (position != last_position || character == '\n')) terminal::putchar(character);
+        if(position == last_position && character == '\n') terminal_putchar(character);
     }
 }
-} // namespace keyboard

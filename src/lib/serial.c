@@ -1,13 +1,11 @@
-#include <serial.hpp>
-#include <io.hpp>
-#include <string.hpp>
+#include <serial.h>
+#include <io.h>
+#include <string.h>
 #include <stddef.h>
 
 #define COM1 0x3f8
 
-namespace serial
-{
-int init() {
+int serial_init() {
    outb(COM1 + 1, 0x00);    // Disable all interrupts
    outb(COM1 + 3, 0x80);    // Enable DLAB (set baud rate divisor)
    outb(COM1 + 0, 0x03);    // Set divisor to 3 (lo byte) 38400 baud
@@ -54,11 +52,10 @@ void write_str_serial(const char *data) {
     write_serial(data[i]);
 }
  
-void log(const char *from, const char *state) {
+void serial_log(const char *from, const char *state) {
   write_serial('[');
   write_str_serial(from);
   write_str_serial("] ");
   write_str_serial(state);
   write_serial('\n');
-}
 }

@@ -1,13 +1,12 @@
 #include <stdint.h>
-#include <dt.hpp>
-#include <io.hpp>
-#include <isr.hpp>
-#include <serial.hpp>
+#include <dt.h>
+#include <io.h>
+#include <isr.h>
+#include <serial.h>
 
-extern "C" void gdt_flush(uint32_t);
-extern "C" void idt_flush(uint32_t);
+void gdt_flush(uint32_t);
+void idt_flush(uint32_t);
 
-namespace gdt {
 gdt_entry_t gdt_entries[7];
 gdt_ptr_t gdt_ptr;
 
@@ -37,11 +36,9 @@ static void init_gdt() {
   gdt_set_gate(6, 0, 0xFFFFFFFF, 0xF6, 0xCF); // User mode stack segment
 
   gdt_flush((uint32_t)&gdt_ptr);
-  serial::log("gdt", "Initialized");
+  serial_log("gdt", "Initialized");
 }
-} // namespace gdt
 
-namespace idt {
 idt_entry_t idt_entries[256];
 idt_ptr_t   idt_ptr;
 
@@ -125,15 +122,14 @@ static void init_idt()
     idt_set_gate(47, (uint32_t)irq15, 0x08, 0x8E);
 
     idt_flush((uint32_t)&idt_ptr);
-    serial::log("gdt", "Initialized");
+    serial_log("gdt", "Initialized");
 }
-} // namespace idt
 
 void init_descriptor_tables()
 {
-  serial::log("gdt", "Initializing");
-  gdt::init_gdt();
-  serial::log("idt", "Initializing");
-  idt::init_idt();
-  serial::log("dts", "Initialized");
+  serial_log("gdt", "Initializing");
+  init_gdt();
+  serial_log("idt", "Initializing");
+  init_idt();
+  serial_log("dts", "Initialized");
 }

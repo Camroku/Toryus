@@ -36,5 +36,4 @@ struct idt_ptr_struct
 } __attribute__((packed));
 typedef struct idt_ptr_struct idt_ptr_t;
 
-// Init descriptor tables
 void init_descriptor_tables();
