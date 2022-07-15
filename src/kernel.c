@@ -8,18 +8,7 @@
 #include <serial.h>
 #include <string.h>
 #include <io.h>
-
-// Get the content until a seperator
-void get_until(char *dest, char *src, char sep)
-{
-    int i = 0;
-    while (src[i] != sep && src[i] != '\0')
-    {
-        dest[i] = src[i];
-        i++;
-    }
-    dest[i] = '\0';
-}
+#include <shell.h>
 
 /* Toryus Kernel main function */
 void kernel_main(void)
@@ -72,39 +61,7 @@ void kernel_main(void)
   serial_log("kbd", "Initializing");
   keyboard_init();
   serial_log("knl", "Initialized");
-  char theinput[129];
-  char command[129];
-  int stat = 0;
-  while (true)
-  {
-    memset(theinput, 0, 129);
-    memset(command, 0, 129);
-    terminal_print("$ ");
-    stat = keyboard_input(128, theinput);
-    if (stat == 1)
-    {
-      terminal_print("\n");
-      continue;
-    }
-    get_until(command, theinput, ' ');
-    if (strcmp(command, "clear") == 0)
-    {
-      terminal_clear();
-    } else if (strcmp(command, "echo") == 0)
-    {
-      terminal_print(theinput + 5);
-      terminal_print("\n");
-    } else if (strcmp(command, "help") == 0)
-    {
-      terminal_print("Available commands:\n");
-      terminal_print("  clear\n");
-      terminal_print("  echo <message>\n");
-      terminal_print("  help\n");
-    } else
-    {
-      terminal_print("Unknown command.\n");
-    }
-  }
+  shell_exec();
 }
 /*
 
