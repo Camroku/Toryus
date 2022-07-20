@@ -128,6 +128,7 @@ static void init_idt()
 
 void init_descriptor_tables()
 {
+  asm volatile ("sti");
   serial_log("gdt", "Initializing");
   init_gdt();
   serial_log("idt", "Initializing");

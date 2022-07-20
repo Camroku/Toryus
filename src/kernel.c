@@ -17,9 +17,13 @@ void kernel_main(void)
   serial_log("knl", "Initializing");
   serial_log("dts", "Initializing");
   init_descriptor_tables();
-  asm volatile ("sti");
   serial_log("tty", "Initializing");
   terminal_initialize();
+  serial_log("pit", "Initializing");
+  timer_init(1000);
+  serial_log("kbd", "Initializing");
+  keyboard_init();
+  serial_log("knl", "Initialized");
 
   // Toryus logo
   terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
@@ -51,16 +55,8 @@ void kernel_main(void)
     "            ##      ##            \n"
     "              ##  ##              \n"
     "                ##                \n"
+    "Welcome to Toryus!\n"
   );
-  // Print an ASCII art square rotated.
-
-  terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
-  terminal_print("Welcome to Toryus!\n");
-  serial_log("pit", "Initializing");
-  timer_init(1000);
-  serial_log("kbd", "Initializing");
-  keyboard_init();
-  serial_log("knl", "Initialized");
   shell_exec();
 }
 /*
