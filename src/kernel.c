@@ -15,13 +15,9 @@ void kernel_main(void)
 {
   serial_init();
   serial_log("knl", "Initializing");
-  serial_log("dts", "Initializing");
   init_descriptor_tables();
-  serial_log("tty", "Initializing");
   terminal_initialize();
-  serial_log("pit", "Initializing");
   timer_init(1000);
-  serial_log("kbd", "Initializing");
   keyboard_init();
   serial_log("knl", "Initialized");
 

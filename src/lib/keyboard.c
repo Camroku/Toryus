@@ -16,7 +16,7 @@ unsigned char shifts[12] = {
 };
 
 unsigned char keyboard_us[128] =
-{
+    {
     0,  27, '1', '2', '3', '4', '5', '6', '7', '8',	'9', '0', '-', '=', '\b', '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n',
     0, // Control
     'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`',   0, // Left shift
@@ -29,11 +29,11 @@ unsigned char keyboard_us[128] =
     0,	// Home key
     0,	// Up Arrow
     0,	// Page Up
-    '-',
+        '-',
     0,	// Left Arrow
-    0,
+        0,
     0,	// Right Arrow
-    '+',
+        '+',
     0,	// 79 - End key
     0,	// Down ArroW
     0,	// Page Down
@@ -135,21 +135,24 @@ static void keyboard_handler(registers_t *regs)
             ctrl = true;
         }
         lastchar = scancodetoascii(scancode);
-        if (lastchar != 0) gotchar = true;
+        if (lastchar != 0)
+            gotchar = true;
     }
 }
 
 void keyboard_init(void)
 {
-   register_interrupt_handler(33, &keyboard_handler);
-   serial_log("kbd", "Initialized");
+    serial_log("kbd", "Initializing");
+    register_interrupt_handler(33, &keyboard_handler);
+    serial_log("kbd", "Initialized");
 }
 
 char keyboard_getchar()
 {
     lastchar = 0; // set last character to null character
     gotchar = false;
-    while (gotchar == false) io_wait(); // wait until key press
+    while (gotchar == false)
+        io_wait();   // wait until key press
     gotchar = false; // set gotchar to false
     return lastchar; // return the character
 }
@@ -159,24 +162,32 @@ int keyboard_input(unsigned int input_length, char *theinput)
     int last_position = input_length - 1;
     int position = 0;
     char character = 0;
-    while (character != '\n') { // until the user presses enter
+    while (character != '\n')
+    { // until the user presses enter
         character = keyboard_getchar();
-        if (character == 3) { // if the user presses ctrl-c
+        if (character == 3)
+        { // if the user presses ctrl-c
             terminal_putchar(character);
             return 1;
         }
-        if (character == '\b') {
-            if (position != 0) {
+        if (character == '\b')
+        {
+            if (position != 0)
+            {
                 position--;
                 theinput[position] = 0;
                 terminal_putchar(character);
             }
-        } else if (position != last_position) {
-            if (character != '\n') theinput[position] = character;
+        }
+        else if (position != last_position)
+        {
+            if (character != '\n')
+                theinput[position] = character;
             position++;
             terminal_putchar(character);
         }
-        if(position == last_position && character == '\n') terminal_putchar(character);
+        if (position == last_position && character == '\n')
+            terminal_putchar(character);
     }
     return 0;
 }

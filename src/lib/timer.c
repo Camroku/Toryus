@@ -21,6 +21,7 @@ uint32_t timer_tick()
 
 void timer_init(uint32_t frequency)
 {
+   serial_log("pit", "Initializing");
    // Firstly, register our timer callback.
    register_interrupt_handler(32, &timer_callback);
 
@@ -34,7 +35,7 @@ void timer_init(uint32_t frequency)
 
    // Divisor has to be sent byte-wise, so split here into upper/lower bytes.
    uint8_t l = (uint8_t)(divisor & 0xFF);
-   uint8_t h = (uint8_t)((divisor>>8) & 0xFF);
+   uint8_t h = (uint8_t)((divisor >> 8) & 0xFF);
 
    // Send the frequency divisor.
    outb(0x40, l);

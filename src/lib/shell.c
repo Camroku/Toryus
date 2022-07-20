@@ -156,7 +156,7 @@ void print_uptime(char mode)
 void shell_line(char *line, int len)
 {
     char command[len];
-    memset(command, 0, len); // i have trust issues
+    memset(command, 0, len);
     get_until(command, line, ' ');
     if (strcmp(command, "clear") == 0)
     {
@@ -210,11 +210,11 @@ void shell_line(char *line, int len)
     else if (strcmp(command, "help") == 0)
     {
         terminal_print("Available commands:\n");
-        terminal_print("    clear\n");
-        terminal_print("    echo <text>\n");
-        terminal_print("    stat\n");
-        terminal_print("    uptime\n");
-        terminal_print("    help\n");
+        terminal_print("    clear - Clear screen\n");
+        terminal_print("    echo [text] - Print text\n");
+        terminal_print("    stat - Prints the current status\n");
+        terminal_print("    uptime - Prints the uptime of the system\n");
+        terminal_print("    help - Prints this help message\n");
         stat = 0;
     }
     else

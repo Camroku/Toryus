@@ -20,6 +20,7 @@ uint8_t color;
 uint16_t *buffer;
 
 void terminal_initialize(void) {
+  serial_log("tty", "Initializing");
   row = 0;
   column = 0;
   color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
