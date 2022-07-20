@@ -3,6 +3,7 @@
 #include <io.h>
 #include <isr.h>
 #include <serial.h>
+#include <string.h>
 
 void gdt_flush(uint32_t);
 void idt_flush(uint32_t);

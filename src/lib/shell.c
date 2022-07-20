@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <terminal.h>
 #include <keyboard.h>
-#include <io.h>
 #include <string.h>
 #include <timer.h>
 
