@@ -123,7 +123,7 @@ static void init_idt()
     idt_set_gate(47, (uint32_t)irq15, 0x08, 0x8E);
 
     idt_flush((uint32_t)&idt_ptr);
-    serial_log("gdt", "Initialized");
+    serial_log("idt", "Initialized");
 }
 
 void init_descriptor_tables()

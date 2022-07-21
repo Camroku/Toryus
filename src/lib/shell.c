@@ -205,7 +205,7 @@ void shell_line(char *line, int len)
                 stat = 1;
             }
         }
-        else print_uptime('a');
+        else print_uptime('A');
     }
     else if (strcmp(command, "help") == 0)
     {
