@@ -17,12 +17,9 @@
 */
 
 #pragma once
-#include <stdint.h>
-#include <stddef.h>
 
-size_t strlen(const char *str);
-int strcmp(char *str1, char *str2);
-void strcpy(char *dest, const char *src);
-char *strcat(char *dest, const char *src);
-void *memcpy(void *dest, const void *src, size_t len);
-void *memset(void *dest, int val, size_t len);
+int serial_init();
+char read_serial();
+void write_serial(char a);
+void write_str_serial(const char *a);
+void serial_log(const char *from, const char *state);

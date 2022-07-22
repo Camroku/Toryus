@@ -16,13 +16,17 @@
     <https://www.gnu.org/licenses/>. 
 */
 
-#pragma once
-#include <stdint.h>
-#include <stddef.h>
+char *strcat(char *dest, const char *src)
+{
+  while (*dest != 0)
+  {
+    *dest = *dest + 1;
+  }
 
-size_t strlen(const char *str);
-int strcmp(char *str1, char *str2);
-void strcpy(char *dest, const char *src);
-char *strcat(char *dest, const char *src);
-void *memcpy(void *dest, const void *src, size_t len);
-void *memset(void *dest, int val, size_t len);
+  do
+  {
+    *dest++ = *src++;
+  }
+  while (*src != 0);
+  return dest;
+}

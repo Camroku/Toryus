@@ -2,7 +2,7 @@ AS=nasm
 GCC=i686-elf-gcc
 CFLAGS=-ffreestanding -O2 -Wall -Wextra -fno-exceptions -I./include
 QEMU=qemu-system-i386
-SOURCES=kernel.c lib/*.c
+SOURCES=kernel.c $(wildcard lib/*/*.c)
 QEMUFLAGS=-drive file=Toryus.iso,format=raw,index=0,media=disk -serial file:/dev/stdout
 
 build:

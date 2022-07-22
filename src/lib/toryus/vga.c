@@ -16,13 +16,13 @@
     <https://www.gnu.org/licenses/>. 
 */
 
-#pragma once
 #include <stdint.h>
-#include <stddef.h>
+#include <toryus/vga.h>
 
-size_t strlen(const char *str);
-int strcmp(char *str1, char *str2);
-void strcpy(char *dest, const char *src);
-char *strcat(char *dest, const char *src);
-void *memcpy(void *dest, const void *src, size_t len);
-void *memset(void *dest, int val, size_t len);
+uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
+  return fg | bg << 4;
+}
+
+uint16_t vga_entry(unsigned char uc, uint8_t color) {
+  return (uint16_t)uc | (uint16_t)color << 8;
+}

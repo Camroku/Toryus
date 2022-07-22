@@ -20,9 +20,10 @@
 #include <stdint.h>
 #include <stddef.h>
 
-size_t strlen(const char *str);
-int strcmp(char *str1, char *str2);
-void strcpy(char *dest, const char *src);
-char *strcat(char *dest, const char *src);
-void *memcpy(void *dest, const void *src, size_t len);
-void *memset(void *dest, int val, size_t len);
+void outb(uint16_t port, uint8_t val);
+void outw(uint16_t port, uint16_t val);
+void outl(uint16_t port, uint32_t val);
+uint8_t inb(uint16_t port);
+uint16_t inw(uint16_t port);
+uint32_t inl(uint16_t port);
+void io_wait(void);
