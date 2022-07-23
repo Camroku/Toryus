@@ -4,6 +4,7 @@
 A hobby operating system project in C<br/><br/>
 <a href="https://discord.gg/7qnUz5KUdD"><img src="https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"/></a>
 <a href="https://github.com/Camroku/Toryus"><img src="https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white" alt="Git"/></a>
+<a href="https://wdcd.camroku.tech/toryus"><img src="https://img.shields.io/badge/wdcd-%233f2457.svg?style=for-the-badge" alt="wdcd"/></a>
 </p>
 
 ## Compiling
