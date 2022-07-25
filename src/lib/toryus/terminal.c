@@ -23,6 +23,9 @@
 #include <toryus/vga.h>
 #include <toryus/terminal.h>
 #include <toryus/serial.h>
+#include <toryus/toryus.h>
+
+MODULE("terminal");
 
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
@@ -38,7 +41,7 @@ uint8_t color;
 uint16_t *buffer;
 
 void terminal_initialize(void) {
-  serial_log("tty", "Initializing");
+  LOG("Initializing");
   row = 0;
   column = 0;
   color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
@@ -49,7 +52,7 @@ void terminal_initialize(void) {
       buffer[index] = vga_entry(' ', color);
     }
   }
-  serial_log("tty", "Initialized");
+  LOG("Initialized");
 }
 
 void terminal_setcolor(enum vga_color fore, enum vga_color back) {

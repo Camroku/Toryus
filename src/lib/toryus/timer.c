@@ -23,6 +23,9 @@
 #include <toryus/terminal.h>
 #include <toryus/io.h>
 #include <toryus/serial.h>
+#include <toryus/toryus.h>
+
+MODULE("timer");
 
 uint32_t tick = 0;
 
@@ -39,7 +42,7 @@ uint32_t timer_tick()
 
 void timer_init(uint32_t frequency)
 {
-   serial_log("pit", "Initializing");
+   LOG("Initializing");
    // Firstly, register our timer callback.
    register_interrupt_handler(32, &timer_callback);
 
@@ -58,5 +61,5 @@ void timer_init(uint32_t frequency)
    // Send the frequency divisor.
    outb(0x40, l);
    outb(0x40, h);
-   serial_log("pit", "Initialized");
+   LOG("Initializied");
 }

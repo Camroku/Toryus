@@ -22,6 +22,9 @@
 #include <toryus/io.h>
 #include <toryus/terminal.h>
 #include <toryus/serial.h>
+#include <toryus/toryus.h>
+
+MODULE("keyboard");
 
 char lastchar = 0;
 bool gotchar = false;
@@ -160,9 +163,9 @@ static void keyboard_handler(registers_t *regs)
 
 void keyboard_init(void)
 {
-    serial_log("kbd", "Initializing");
+    LOG("Initializing");
     register_interrupt_handler(33, &keyboard_handler);
-    serial_log("kbd", "Initialized");
+    LOG("Initialized");
 }
 
 char keyboard_getchar()

@@ -27,17 +27,20 @@
 #include <toryus/serial.h>
 #include <toryus/io.h>
 #include <toryus/shell.h>
+#include <toryus/toryus.h>
+
+MODULE("kernel");
 
 /* Toryus Kernel main function */
 void kernel_main(void)
 {
   serial_init();
-  serial_log("knl", "Initializing");
+  LOG("Initializing");
   init_descriptor_tables();
   terminal_initialize();
   timer_init(1000);
   keyboard_init();
-  serial_log("knl", "Initialized");
+  LOG("Initialized");
 
   // Toryus logo
   terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
@@ -71,6 +74,7 @@ void kernel_main(void)
     "                ##                \n"
     "Welcome to Toryus!\n"
   );
+  LOG("Starting shell");
   shell_exec();
 }
 /*

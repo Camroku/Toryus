@@ -22,6 +22,9 @@
 #include <toryus/io.h>
 #include <toryus/isr.h>
 #include <toryus/serial.h>
+#include <toryus/toryus.h>
+
+MODULE("desctables");
 
 void gdt_flush(uint32_t);
 void idt_flush(uint32_t);
@@ -55,7 +58,6 @@ static void init_gdt() {
   gdt_set_gate(6, 0, 0xFFFFFFFF, 0xF6, 0xCF); // User mode stack segment
 
   gdt_flush((uint32_t)&gdt_ptr);
-  serial_log("gdt", "Initialized");
 }
 
 idt_entry_t idt_entries[256];
@@ -141,16 +143,15 @@ static void init_idt()
     idt_set_gate(47, (uint32_t)irq15, 0x08, 0x8E);
 
     idt_flush((uint32_t)&idt_ptr);
-    serial_log("idt", "Initialized");
 }
 
 void init_descriptor_tables()
 {
-  serial_log("dts", "Initializing");
-  serial_log("gdt", "Initializing");
+  LOG("Initializing descriptor tables");
+  LOG("Initializing GDT");
   init_gdt();
-  serial_log("idt", "Initializing");
+  LOG("Initializing IDT");
   init_idt();
   asm volatile ("sti");
-  serial_log("dts", "Initialized");
+  LOG("Initialized descriptor tables");
 }
