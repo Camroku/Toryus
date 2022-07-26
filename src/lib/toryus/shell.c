@@ -23,6 +23,9 @@
 #include <toryus/terminal.h>
 #include <toryus/keyboard.h>
 #include <toryus/timer.h>
+#include <toryus/toryus.h>
+
+MODULE("shell");
 
 int stat = 0;
 
@@ -228,11 +231,11 @@ void shell_line(char *line, int len)
     else if (strcmp(command, "help") == 0)
     {
         terminal_print("Available commands:\n");
-        terminal_print("    clear - Clear screen\n");
-        terminal_print("    echo [text] - Print text\n");
-        terminal_print("    stat - Prints the current status\n");
-        terminal_print("    uptime - Prints the uptime of the system\n");
-        terminal_print("    help - Prints this help message\n");
+        terminal_print("    clear\t\tClear screen\n");
+        terminal_print("    echo [text]\t\tPrint text\n");
+        terminal_print("    stat\t\tPrints the current status\n");
+        terminal_print("    uptime\t\tPrints the uptime of the system\n");
+        terminal_print("    help\t\tPrints this help message\n");
         stat = 0;
     }
     else
