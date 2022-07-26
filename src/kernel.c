@@ -28,13 +28,32 @@
 #include <toryus/io.h>
 #include <toryus/shell.h>
 #include <toryus/toryus.h>
+#include <toryus/multiboot.h>
+#include <toryus/initrd.h>
 
 MODULE("kernel");
 
 /* Toryus Kernel main function */
-void kernel_main(void)
+void kernel_main(uint32_t magic, uint32_t addr)
 {
   serial_init();
+  if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
+  {
+    LOG("Multiboot magic number is invalid!");
+    for (;;);
+  }
+  multiboot_info_t *mbi_ptr = (multiboot_info_t *)addr;
+
+  multiboot_module_t *module_ptr = (multiboot_module_t *)mbi_ptr->mods_addr;
+  mb_module_count = mbi_ptr->mods_count;
+  for (uint32_t i = 0; i < mb_module_count; i++)
+  {
+    mb_module_names[i] = (char *)module_ptr[i].cmdline;
+    if(strcmp((char *)module_ptr->cmdline, "initrd") == 0)
+    {
+      initrd_init(module_ptr->mod_start, module_ptr->mod_end);
+    }
+  }
   LOG("Initializing");
   init_descriptor_tables();
   terminal_initialize();

@@ -34,10 +34,14 @@ stack_top:
 
 section .text
 global _start:function (_start.end - _start)
-_start:
+_start: 
 	mov esp, stack_top
-
+   
 	extern kernel_main
+
+   push ebx
+   push eax
+
 	call kernel_main
 
    cli

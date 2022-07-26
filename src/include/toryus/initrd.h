@@ -13,25 +13,12 @@
 
     You should have received a copy of the GNU General Public
     License along with Toryus. If not, see
-    <https://www.gnu.org/licenses/>.
+    <https://www.gnu.org/licenses/>. 
 */
 
 #pragma once
 #include <stdint.h>
-#include <toryus/serial.h>
 
-#define PANIC(msg) panic(msg, __FILE__, __LINE__);
-#define ASSERT(b) ((b) ? (void)0 : panic_assert(__FILE__, __LINE__, #b))
-#define MODULE(name) __attribute__((unused)) static char *__MODULE_NAME = name;
-#define LOG(message)                 \
-    write_serial('[');               \
-    write_str_serial(__MODULE_NAME); \
-    write_str_serial("]: ");         \
-    write_str_serial(message);       \
-    write_serial('\n');
-
-void panic(const char *message, const char *file, uint32_t line);
-void panic_assert(const char *file, uint32_t line, const char *desc);
-
-uint32_t mb_module_count;
-char **mb_module_names;
+void initrd_init(uint32_t start, uint32_t end);
+char *initrd_read();
+uint32_t initrd_size();

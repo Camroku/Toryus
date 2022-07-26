@@ -13,7 +13,7 @@
 
     You should have received a copy of the GNU General Public
     License along with Toryus. If not, see
-    <https://www.gnu.org/licenses/>. 
+    <https://www.gnu.org/licenses/>.
 */
 
 #include <string.h>
@@ -24,6 +24,7 @@
 #include <toryus/keyboard.h>
 #include <toryus/timer.h>
 #include <toryus/toryus.h>
+#include <toryus/initrd.h>
 
 MODULE("shell");
 
@@ -54,7 +55,8 @@ bool uptime_valid(char mode)
     */
     for (int i = 0; i < 7; i++)
     {
-        if (mode == validmodes[i]) return true;
+        if (mode == validmodes[i])
+            return true;
     }
     return false;
 }
@@ -106,35 +108,40 @@ void print_uptime_pretty(int level)
     }
     if (level == 4 || (months > 0 && level == 6))
     {
-        if (printedanything) terminal_print(", ");
+        if (printedanything)
+            terminal_print(", ");
         terminal_print_dec(months);
         terminal_print(" months");
         printedanything = true;
     }
     if (level == 3 || (days > 0 && level == 6))
     {
-        if (printedanything) terminal_print(", ");
+        if (printedanything)
+            terminal_print(", ");
         terminal_print_dec(days);
         terminal_print(" days");
         printedanything = true;
     }
     if (level == 2 || (hours > 0 && level == 6))
     {
-        if (printedanything) terminal_print(", ");
+        if (printedanything)
+            terminal_print(", ");
         terminal_print_dec(hours);
         terminal_print(" hours");
         printedanything = true;
     }
     if (level == 1 || (minutes > 0 && level == 6))
     {
-        if (printedanything) terminal_print(", ");
+        if (printedanything)
+            terminal_print(", ");
         terminal_print_dec(minutes);
         terminal_print(" minutes");
         printedanything = true;
     }
     if (level == 0 || (seconds > 0 && level == 6))
     {
-        if (printedanything) terminal_print(", ");
+        if (printedanything)
+            terminal_print(", ");
         terminal_print_dec(seconds);
         terminal_print(" seconds");
         printedanything = true;
@@ -172,6 +179,14 @@ void print_uptime(char mode)
         print_uptime_unpretty();
         break;
     }
+}
+
+void print_initrd()
+{
+    terminal_print("initrd: ");
+    terminal_print_dec(initrd_size());
+    terminal_print(" bytes\n");
+    terminal_print(initrd_read());
 }
 
 void shell_line(char *line, int len)
@@ -226,15 +241,41 @@ void shell_line(char *line, int len)
                 stat = 1;
             }
         }
-        else print_uptime('A');
+        else
+            print_uptime('A');
+    }
+    else if (strcmp(command, "initrd") == 0)
+    {
+        terminal_print_dec(initrd_size());
+        terminal_print(" bytes\n");
+        terminal_print(initrd_read());
+    }
+    else if (strcmp(command, "modules") == 0)
+    {
+        terminal_print("Module count: ");
+        terminal_print_dec(mb_module_count);
+        terminal_print("\n");
+        if (strcmp(line + 8, "list") == 0)
+        {
+            for (uint32_t i = 0; i < mb_module_count; i++)
+            {
+                terminal_print("Module ");
+                terminal_print_dec(i);
+                terminal_print(": ");
+                terminal_print(mb_module_names[i]);
+                terminal_print("\n");
+            }
+        }
     }
     else if (strcmp(command, "help") == 0)
     {
         terminal_print("Available commands:\n");
         terminal_print("    clear\t\tClear screen\n");
-        terminal_print("    echo [text]\t\tPrint text\n");
+        terminal_print("    echo [<text>]\tPrint text\n");
         terminal_print("    stat\t\tPrints the current status\n");
         terminal_print("    uptime\t\tPrints the uptime of the system\n");
+        terminal_print("    initrd\t\tPrints the initrd\n");
+        terminal_print("    modules [list]\tPrints the module count\n");
         terminal_print("    help\t\tPrints this help message\n");
         stat = 0;
     }
@@ -257,7 +298,9 @@ void shell_exec(void)
     while (true)
     {
         memset(theinput, 0, 129);
+        terminal_setcolor(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
         terminal_print("$ ");
+        terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
         issigint = keyboard_input(128, theinput);
         if (issigint == 0)
         {
