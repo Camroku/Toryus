@@ -25,11 +25,6 @@
 
 // printf implementation based on https://wiki.osdev.org/Meaty_Skeleton#libc.2Fstdio.2Fprintf.c
 
-static bool print(const char *data, size_t length)
-{
-    return terminal_write(data, length);
-}
-
 int printf(const char *restrict format, ...)
 {
     va_list parameters;
@@ -53,7 +48,7 @@ int printf(const char *restrict format, ...)
                 // TODO: Set errno to EOVERFLOW.
                 return -1;
             }
-            if (!print(format, amount))
+            if (!terminal_write(format, amount))
                 return -1;
             format += amount;
             written += amount;
@@ -71,7 +66,7 @@ int printf(const char *restrict format, ...)
                 // TODO: Set errno to EOVERFLOW.
                 return -1;
             }
-            if (!print(&c, sizeof(c)))
+            if (!terminal_write(&c, sizeof(c)))
                 return -1;
             written++;
         }
@@ -85,7 +80,7 @@ int printf(const char *restrict format, ...)
                 // TODO: Set errno to EOVERFLOW.
                 return -1;
             }
-            if (!print(str, len))
+            if (!terminal_write(str, len))
                 return -1;
             written += len;
         }
@@ -112,7 +107,7 @@ int printf(const char *restrict format, ...)
                 // TODO: Set errno to EOVERFLOW.
                 return -1;
             }
-            if (!print(format, len))
+            if (!terminal_write(format, len))
                 return -1;
             written += len;
             format += len;
