@@ -13,7 +13,7 @@
 
     You should have received a copy of the GNU General Public
     License along with Toryus. If not, see
-    <https://www.gnu.org/licenses/>. 
+    <https://www.gnu.org/licenses/>.
 */
 
 #include <stdint.h>
@@ -33,7 +33,8 @@ void panic(const char *message, const char *file, uint32_t line)
     terminal_print_dec(line);
     terminal_print("\n");
     // Halt by going into an infinite loop.
-    for(;;);
+    for (;;)
+        ;
 }
 
 void panic_assert(const char *file, uint32_t line, const char *desc)
@@ -49,5 +50,6 @@ void panic_assert(const char *file, uint32_t line, const char *desc)
     terminal_print_dec(line);
     terminal_print("\n");
     // Halt by going into an infinite loop.
-    for(;;);
+    for (;;)
+        ;
 }

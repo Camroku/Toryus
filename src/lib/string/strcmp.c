@@ -13,26 +13,26 @@
 
     You should have received a copy of the GNU General Public
     License along with Toryus. If not, see
-    <https://www.gnu.org/licenses/>. 
+    <https://www.gnu.org/licenses/>.
 */
 
 #include <stddef.h>
 
 int strcmp(char *str1, char *str2)
 {
-  int i = 0;
-  int failed = 0;
-  while(str1[i] != '\0' && str2[i] != '\0')
-  {
-    if(str1[i] != str2[i])
+    int i = 0;
+    int failed = 0;
+    while (str1[i] != '\0' && str2[i] != '\0')
     {
-      failed = 1;
-      break;
+        if (str1[i] != str2[i])
+        {
+            failed = 1;
+            break;
+        }
+        i++;
     }
-    i++;
-  }
-  if((str1[i] == '\0' && str2[i] != '\0') || (str1[i] != '\0' && str2[i] == '\0'))
-    failed = 1;
+    if ((str1[i] == '\0' && str2[i] != '\0') || (str1[i] != '\0' && str2[i] == '\0'))
+        failed = 1;
 
-  return failed;
+    return failed;
 }

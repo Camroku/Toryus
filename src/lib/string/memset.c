@@ -13,15 +13,15 @@
 
     You should have received a copy of the GNU General Public
     License along with Toryus. If not, see
-    <https://www.gnu.org/licenses/>. 
+    <https://www.gnu.org/licenses/>.
 */
 
 #include <stddef.h>
 
-void *memset (void *dest, int val, size_t len)
+void *memset(void *dest, int val, size_t len)
 {
-  unsigned char *ptr = dest;
-  while (len-- > 0)
-    *ptr++ = val;
-  return dest;
+    unsigned char *ptr = dest;
+    while (len-- > 0)
+        *ptr++ = val;
+    return dest;
 }

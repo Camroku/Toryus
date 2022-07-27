@@ -22,9 +22,9 @@ CHECKSUM equ -(MAGIC + FLAGS)
 
 section .multiboot
 align 4
-	dd MAGIC
-	dd FLAGS
-	dd CHECKSUM
+    dd MAGIC
+    dd FLAGS
+    dd CHECKSUM
 
 section .bss
 align 16
@@ -35,42 +35,42 @@ stack_top:
 section .text
 global _start:function (_start.end - _start)
 _start: 
-	mov esp, stack_top
+    mov esp, stack_top
    
-	extern kernel_main
+    extern kernel_main
 
-   push ebx
-   push eax
+    push ebx
+    push eax
 
-	call kernel_main
+    call kernel_main
 
-   cli
-.hang:	hlt
-	jmp .hang
+    cli
+.hang:    hlt
+    jmp .hang
 .end:
 
 global gdt_flush
 
 gdt_flush:
-   mov eax, [esp+4]
-   lgdt [eax]
+    mov eax, [esp+4]
+    lgdt [eax]
 
-   mov ax, 0x10
-   mov ds, ax
-   mov es, ax
-   mov fs, ax
-   mov gs, ax
-   mov ss, ax
-   jmp 0x08:.flush
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+    jmp 0x08:.flush
 .flush:
-   ret
+    ret
 
 global idt_flush
 
 idt_flush:
-   mov eax, [esp+4]
-   lidt [eax]
-   ret
+    mov eax, [esp+4]
+    lidt [eax]
+    ret
 
 %include "interrupt.asm"
 

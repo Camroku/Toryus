@@ -13,14 +13,15 @@
 
     You should have received a copy of the GNU General Public
     License along with Toryus. If not, see
-    <https://www.gnu.org/licenses/>. 
+    <https://www.gnu.org/licenses/>.
 */
 
 #include <stddef.h>
 
-size_t strlen(const char *str) {
-  size_t len = 0;
-  while (str[len])
-    len++;
-  return len;
+size_t strlen(const char *str)
+{
+    size_t len = 0;
+    while (str[len])
+        len++;
+    return len;
 }

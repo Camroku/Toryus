@@ -13,14 +13,13 @@
 
     You should have received a copy of the GNU General Public
     License along with Toryus. If not, see
-    <https://www.gnu.org/licenses/>. 
+    <https://www.gnu.org/licenses/>.
 */
 
 void strcpy(char *dest, const char *src)
 {
-  do
-  {
-    *dest++ = *src++;
-  }
-  while (*src != 0);
+    do
+    {
+        *dest++ = *src++;
+    } while (*src != 0);
 }

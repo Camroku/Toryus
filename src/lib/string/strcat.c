@@ -13,20 +13,19 @@
 
     You should have received a copy of the GNU General Public
     License along with Toryus. If not, see
-    <https://www.gnu.org/licenses/>. 
+    <https://www.gnu.org/licenses/>.
 */
 
 char *strcat(char *dest, const char *src)
 {
-  while (*dest != 0)
-  {
-    *dest = *dest + 1;
-  }
+    while (*dest != 0)
+    {
+        *dest = *dest + 1;
+    }
 
-  do
-  {
-    *dest++ = *src++;
-  }
-  while (*src != 0);
-  return dest;
+    do
+    {
+        *dest++ = *src++;
+    } while (*src != 0);
+    return dest;
 }
