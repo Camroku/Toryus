@@ -268,7 +268,6 @@ void shell_line(char *line, int len)
 
 void shell_exec(void)
 {
-    terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
     printf(
         "Toryus Shell\n"
         "Type 'help' for a list of commands.\n"
@@ -278,9 +277,7 @@ void shell_exec(void)
     while (true)
     {
         memset(theinput, 0, 129);
-        terminal_setcolor(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
-        printf("$ ");
-        terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+        printf("\033[0;32m$ \033[1;37m");
         issigint = keyboard_input(128, theinput);
         if (issigint == 0)
         {

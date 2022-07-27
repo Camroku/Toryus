@@ -18,6 +18,7 @@
 
 #pragma once
 #include <stdint.h>
+#include <stdbool.h>
 #include <toryus/vga.h>
 #include <stddef.h>
 
@@ -27,7 +28,7 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y);
 void terminal_move_cursor();
 void terminal_scroll();
 void terminal_putchar(char c);
-void terminal_write(const char *data, size_t size);
+bool terminal_write(const char *text, size_t size);
 void terminal_print(const char *data);
 void terminal_clear();
 int  terminal_print_dec(uint32_t n);

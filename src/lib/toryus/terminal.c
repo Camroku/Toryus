@@ -19,6 +19,8 @@
 #include <string.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdbool.h>
 #include <toryus/io.h>
 #include <toryus/vga.h>
 #include <toryus/terminal.h>
@@ -39,6 +41,26 @@ size_t row;
 size_t column;
 uint8_t color;
 uint16_t *buffer;
+
+enum vga_color colorlist[] = {
+    VGA_COLOR_BLACK,
+    VGA_COLOR_RED,
+    VGA_COLOR_GREEN,
+    VGA_COLOR_BROWN,
+    VGA_COLOR_BLUE,
+    VGA_COLOR_MAGENTA,
+    VGA_COLOR_CYAN,
+    VGA_COLOR_LIGHT_GREY};
+
+enum vga_color boldcolorlist[] = {
+    VGA_COLOR_DARK_GREY,
+    VGA_COLOR_LIGHT_RED,
+    VGA_COLOR_LIGHT_GREEN,
+    VGA_COLOR_LIGHT_BROWN,
+    VGA_COLOR_LIGHT_BLUE,
+    VGA_COLOR_LIGHT_MAGENTA,
+    VGA_COLOR_LIGHT_CYAN,
+    VGA_COLOR_WHITE};
 
 void terminal_initialize(void)
 {
@@ -179,12 +201,69 @@ void terminal_putchar(char c)
     terminal_move_cursor();
 }
 
-void terminal_write(const char *data, size_t size)
+bool terminal_write(const char *text, size_t size)
 {
+    char *data = (char *)text;
     for (size_t i = 0; i < size; i++)
-        terminal_putchar(data[i]);
+    {
+        if (data[i] == EOF)
+        {
+            return false;
+        }
+        if (data[i] == '\033' && data[i + 1] == '[')
+        {
+            i += 2;
+            bool is_bold = (data[i] == '1');
+            if (data[i] != '0' && data[i] != '1')
+            {
+                i -= 2;
+            }
+            i++;
+            do
+            {
+                i++;
+                bool isforeground = (data[i] == '3');
+                i++;
+                int colour = data[i] - '0';
+                i++;
+                if (isforeground)
+                {
+                    if (is_bold)
+                    {
+                        foreColour = boldcolorlist[colour];
+                    }
+                    else
+                    {
+                        foreColour = colorlist[colour];
+                    }
+                }
+                else
+                {
+                    if (is_bold)
+                    {
+                        backColour = boldcolorlist[colour];
+                    }
+                    else
+                    {
+                        backColour = colorlist[colour];
+                    }
+                }
+                color = foreColour | backColour << 4;
+                if (data[i] == 'm')
+                {
+                    break;
+                }
+            } while (data[i] == ';');
+        }
+
+        else
+        {
+            terminal_putchar(data[i]);
+        }
+    }
     terminal_scroll();
     terminal_move_cursor();
+    return true;
 }
 
 void terminal_print(const char *data) { terminal_write(data, strlen(data)); }

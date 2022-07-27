@@ -64,23 +64,12 @@ void kernel_main(uint32_t magic, uint32_t addr)
     LOG("Initialized");
 
     // Toryus logo
-    terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
     printf(
-        "                ##                \n"
-        "              ##  ##     ####");
-    terminal_setcolor(VGA_COLOR_GREEN, VGA_COLOR_BLACK);
-    printf("###  \n");
-    terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
-    printf("            ##      ##  #    ");
-    terminal_setcolor(VGA_COLOR_GREEN, VGA_COLOR_BLACK);
-    printf("#### \n");
-    terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
-    printf("          ##          ###     ");
-    terminal_setcolor(VGA_COLOR_GREEN, VGA_COLOR_BLACK);
-    printf("### \n");
-    terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
-    printf(
-        "        ##              ##     #  \n"
+        "\033[1;37m                ##                \n"
+        "              ##  ##     ####\033[1;32m###  \n"
+        "\033[1;37m            ##      ##  #    \033[1;32m#### \n"
+        "\033[1;37m          ##          ###     \033[1;32m### \n"
+        "\033[1;37m        ##              ##     #  \n"
         "      ##                  #####   \n"
         "    ##                      ##    \n"
         "  ##                          ##  \n"
