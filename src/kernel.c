@@ -19,6 +19,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <toryus/terminal.h>
 #include <toryus/dt.h>
@@ -64,21 +65,21 @@ void kernel_main(uint32_t magic, uint32_t addr)
 
     // Toryus logo
     terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
-    terminal_print(
+    printf(
         "                ##                \n"
         "              ##  ##     ####");
     terminal_setcolor(VGA_COLOR_GREEN, VGA_COLOR_BLACK);
-    terminal_print("###  \n");
+    printf("###  \n");
     terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
-    terminal_print("            ##      ##  #    ");
+    printf("            ##      ##  #    ");
     terminal_setcolor(VGA_COLOR_GREEN, VGA_COLOR_BLACK);
-    terminal_print("#### \n");
+    printf("#### \n");
     terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
-    terminal_print("          ##          ###     ");
+    printf("          ##          ###     ");
     terminal_setcolor(VGA_COLOR_GREEN, VGA_COLOR_BLACK);
-    terminal_print("### \n");
+    printf("### \n");
     terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
-    terminal_print(
+    printf(
         "        ##              ##     #  \n"
         "      ##                  #####   \n"
         "    ##                      ##    \n"

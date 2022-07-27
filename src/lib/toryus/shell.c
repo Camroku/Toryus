@@ -18,6 +18,7 @@
 
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <toryus/shell.h>
 #include <toryus/vga.h>
 #include <toryus/terminal.h>
@@ -64,8 +65,7 @@ bool uptime_valid(char mode)
 void print_uptime_unpretty(void)
 {
     int uptime = timer_tick();
-    terminal_print_dec(uptime);
-    terminal_print("\n");
+    printf("%d\n", uptime);
 }
 
 void print_uptime_pretty(int level)
@@ -98,55 +98,49 @@ void print_uptime_pretty(int level)
         years = months / 12;
         months = months % 12;
     }
-    terminal_print("uptime: ");
+    printf("uptime: ");
     bool printedanything = false;
     if (level == 5 || (years > 0 && level == 6))
     {
-        terminal_print_dec(years);
-        terminal_print(" years");
+        printf("%d years", years);
         printedanything = true;
     }
     if (level == 4 || (months > 0 && level == 6))
     {
         if (printedanything)
-            terminal_print(", ");
-        terminal_print_dec(months);
-        terminal_print(" months");
+            printf(", ");
+        printf("%d months", months);
         printedanything = true;
     }
     if (level == 3 || (days > 0 && level == 6))
     {
         if (printedanything)
-            terminal_print(", ");
-        terminal_print_dec(days);
-        terminal_print(" days");
+            printf(", ");
+        printf("%d days", days);
         printedanything = true;
     }
     if (level == 2 || (hours > 0 && level == 6))
     {
         if (printedanything)
-            terminal_print(", ");
-        terminal_print_dec(hours);
-        terminal_print(" hours");
+            printf(", ");
+        printf("%d hours", hours);
         printedanything = true;
     }
     if (level == 1 || (minutes > 0 && level == 6))
     {
         if (printedanything)
-            terminal_print(", ");
-        terminal_print_dec(minutes);
-        terminal_print(" minutes");
+            printf(", ");
+        printf("%d minutes", minutes);
         printedanything = true;
     }
     if (level == 0 || (seconds > 0 && level == 6))
     {
         if (printedanything)
-            terminal_print(", ");
-        terminal_print_dec(seconds);
-        terminal_print(" seconds");
+            printf(", ");
+        printf("%d seconds", seconds);
         printedanything = true;
     }
-    terminal_print("\n");
+    printf("\n");
     stat = 0;
 }
 
@@ -181,14 +175,6 @@ void print_uptime(char mode)
     }
 }
 
-void print_initrd()
-{
-    terminal_print("initrd: ");
-    terminal_print_dec(initrd_size());
-    terminal_print(" bytes\n");
-    terminal_print(initrd_read());
-}
-
 void shell_line(char *line, int len)
 {
     char command[len];
@@ -201,15 +187,12 @@ void shell_line(char *line, int len)
     }
     else if (strcmp(command, "echo") == 0)
     {
-        terminal_print(line + 5);
-        terminal_print("\n");
+        printf("%s\n", line + 5);
         stat = 0;
     }
     else if (strcmp(command, "stat") == 0)
     {
-        terminal_print("stat: ");
-        terminal_print_dec(stat);
-        terminal_print("\n");
+        printf("stat: %d\n", stat);
         stat = 0;
     }
     else if (strcmp(command, "uptime") == 0)
@@ -222,68 +205,63 @@ void shell_line(char *line, int len)
             }
             else if (line[8] == 'h')
             {
-                terminal_print("uptime: prints the uptime of the system\n");
-                terminal_print("uptime [-mode/-h]: prints the uptime of the system in a certain mode\n");
-                terminal_print("    -h: prints this help message\n\n");
-                terminal_print("uptime modes:\n");
-                terminal_print("    -A: all\n");
-                terminal_print("    -a: seconds\n");
-                terminal_print("    -B: minutes\n");
-                terminal_print("    -b: hours\n");
-                terminal_print("    -C: days\n");
-                terminal_print("    -c: months\n");
-                terminal_print("    -D: years\n");
+                printf(
+                    "uptime: prints the uptime of the system\n"
+                    "uptime [-mode/-h]: prints the uptime of the system in a certain mode\n"
+                    "    -h: prints this help message\n\n"
+                    "uptime modes:\n"
+                    "    -A: all\n"
+                    "    -a: seconds\n"
+                    "    -B: minutes\n"
+                    "    -b: hours\n"
+                    "    -C: days\n"
+                    "    -c: months\n"
+                    "    -D: years\n"
+                );
                 stat = 0;
             }
             else
             {
-                terminal_print("uptime: invalid mode\n");
+                printf("uptime: invalid mode\n");
                 stat = 1;
             }
         }
         else
-            print_uptime('A');
+            print_uptime_unpretty();
     }
     else if (strcmp(command, "initrd") == 0)
     {
-        terminal_print_dec(initrd_size());
-        terminal_print(" bytes\n");
-        terminal_print(initrd_read());
+        printf("initrd: %d bytes\n%s\n", initrd_size(), initrd_read());
+        stat = 0;
     }
     else if (strcmp(command, "modules") == 0)
     {
-        terminal_print("Module count: ");
-        terminal_print_dec(mb_module_count);
-        terminal_print("\n");
+        printf("Module count: %d\n", mb_module_count);
         if (strcmp(line + 8, "list") == 0)
         {
             for (uint32_t i = 0; i < mb_module_count; i++)
             {
-                terminal_print("Module ");
-                terminal_print_dec(i);
-                terminal_print(": ");
-                terminal_print(mb_module_names[i]);
-                terminal_print("\n");
+                printf("Module %d: %s\n", i, mb_module_names[i]);
             }
         }
+        stat = 0;
     }
     else if (strcmp(command, "help") == 0)
     {
-        terminal_print("Available commands:\n");
-        terminal_print("    clear\t\tClear screen\n");
-        terminal_print("    echo [<text>]\tPrint text\n");
-        terminal_print("    stat\t\tPrints the current status\n");
-        terminal_print("    uptime\t\tPrints the uptime of the system\n");
-        terminal_print("    initrd\t\tPrints the initrd\n");
-        terminal_print("    modules [list]\tPrints the module count\n");
-        terminal_print("    help\t\tPrints this help message\n");
+        printf("Available commands:\n"
+            "    clear\t\tClear screen\n"
+            "    echo [<text>]\tPrint text\n"
+            "    stat\t\tPrints the current status\n"
+            "    uptime\t\tPrints the uptime of the system\n"
+            "    initrd\t\tPrints the initrd\n"
+            "    modules [list]\tPrints the module count\n"
+            "    help\t\tPrints this help message\n"
+        );
         stat = 0;
     }
     else
     {
-        terminal_print("Unknown command '");
-        terminal_print(command);
-        terminal_print("'\n");
+        printf("Unknown command '%s'\n", command);
         stat = 127;
     }
 }
@@ -291,15 +269,17 @@ void shell_line(char *line, int len)
 void shell_exec(void)
 {
     terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
-    terminal_print("Toryus Shell\n");
-    terminal_print("Type 'help' for a list of commands.\n");
+    printf(
+        "Toryus Shell\n"
+        "Type 'help' for a list of commands.\n"
+    );
     char theinput[129];
     int issigint;
     while (true)
     {
         memset(theinput, 0, 129);
         terminal_setcolor(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
-        terminal_print("$ ");
+        printf("$ ");
         terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
         issigint = keyboard_input(128, theinput);
         if (issigint == 0)
@@ -308,7 +288,7 @@ void shell_exec(void)
         }
         else
         {
-            terminal_print("\n");
+            printf("\n");
             stat = 2;
         }
     }

@@ -208,12 +208,12 @@ void terminal_clear()
     terminal_move_cursor();
 }
 
-void terminal_print_dec(uint32_t n)
+int terminal_print_dec(uint32_t n)
 {
     if (n == 0)
     {
         terminal_print("0");
-        return;
+        return 1;
     }
 
     int32_t acc = n;
@@ -235,6 +235,7 @@ void terminal_print_dec(uint32_t n)
         c2[i--] = c[j++];
     }
     terminal_print(c2);
+    return strlen(c2);
 }
 
 void terminal_handle_backspace()
@@ -256,10 +257,11 @@ void terminal_handle_backspace()
     *location = ' ' | attribute;
 }
 
-void terminal_print_hex(uint32_t n)
+int terminal_print_hex(uint32_t n)
 {
     int32_t tmp;
     terminal_print("0x");
+    int len = 2;
     char noZeroes = 1;
 
     int i;
@@ -280,6 +282,7 @@ void terminal_print_hex(uint32_t n)
             noZeroes = 0;
             terminal_putchar(tmp + '0');
         }
+        len++;
     }
 
     tmp = n & 0xF;
@@ -291,4 +294,6 @@ void terminal_print_hex(uint32_t n)
     {
         terminal_putchar(tmp + '0');
     }
+    len++;
+    return i;
 }
