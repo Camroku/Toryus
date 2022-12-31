@@ -16,8 +16,10 @@
     <https://www.gnu.org/licenses/>.
 */
 
+#include <stdio.h>
 #include <string.h>
 #include <stddef.h>
+#include <stdbool.h>
 #include <toryus/serial.h>
 #include <toryus/io.h>
 
@@ -65,16 +67,109 @@ int is_transmit_empty()
     return inb(COM1 + 5) & 0x20;
 }
 
-void write_serial(char data)
+bool write_serial(char data)
 {
-    while (is_transmit_empty() == 0)
-        ;
+    while (is_transmit_empty() == 0);
 
     outb(COM1, data);
+    return 1; // was too lazy to change code in logf
 }
 
-void write_str_serial(const char *data)
+bool write_str_serial(const char *data)
 {
     for (size_t i = 0; i < strlen(data); i++)
+    {
+        if (data[i] == EOF)
+        {
+            return false;
+            break;
+        }
         write_serial(data[i]);
+    }
+    return true;
+}
+
+bool write_str_serial_strict(const char *data, size_t len)
+{
+    for (size_t i = 0; i < len; i++)
+    {
+        if (data[i] == EOF)
+        {
+            return false;
+            break;
+        }
+        write_serial(data[i]);
+    }
+    return true;
+}
+
+int write_int_serial(uint32_t n)
+{
+    if (n == 0)
+    {
+        write_serial('0');
+        return 1;
+    }
+
+    int32_t acc = n;
+    char c[32];
+    int i = 0;
+    while (acc > 0)
+    {
+        c[i] = '0' + acc % 10;
+        acc /= 10;
+        i++;
+    }
+    c[i] = 0;
+
+    char c2[32];
+    c2[i--] = 0;
+    int j = 0;
+    while (i >= 0)
+    {
+        c2[i--] = c[j++];
+    }
+    write_str_serial(c2);
+    return strlen(c2);
+}
+
+int write_hex_serial(uint32_t n)
+{
+    int32_t tmp;
+    write_str_serial("0x");
+    int len = 2;
+    char noZeroes = 1;
+
+    int i;
+    for (i = 28; i > 0; i -= 4)
+    {
+        tmp = (n >> i) & 0xF;
+        if (tmp == 0 && noZeroes != 0)
+        {
+            continue;
+        }
+        if (tmp >= 0xA)
+        {
+            noZeroes = 0;
+            write_serial(tmp - 0xA + 'a');
+        }
+        else
+        {
+            noZeroes = 0;
+            write_serial(tmp + '0');
+        }
+        len++;
+    }
+
+    tmp = n & 0xF;
+    if (tmp >= 0xA)
+    {
+        write_serial(tmp - 0xA + 'a');
+    }
+    else
+    {
+        write_serial(tmp + '0');
+    }
+    len++;
+    return i;
 }

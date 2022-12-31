@@ -20,18 +20,16 @@
 #include <stdint.h>
 #include <toryus/serial.h>
 
+void panic(const char *message, const char *file, uint32_t line);
+void panic_assert(const char *file, uint32_t line, const char *desc);
+void log(const char *module, const char *message);
+int logf(const char *module, const char* restrict format, ...);
+
 #define PANIC(msg) panic(msg, __FILE__, __LINE__);
 #define ASSERT(b) ((b) ? (void)0 : panic_assert(__FILE__, __LINE__, #b))
 #define MODULE(name) __attribute__((unused)) static char *__MODULE_NAME = name;
-#define LOG(message)                 \
-    write_serial('[');               \
-    write_str_serial(__MODULE_NAME); \
-    write_str_serial("]: ");         \
-    write_str_serial(message);       \
-    write_serial('\n');
-
-void panic(const char *message, const char *file, uint32_t line);
-void panic_assert(const char *file, uint32_t line, const char *desc);
+#define LOG(message) log(__MODULE_NAME, message)
+#define LOGF(message, ...) logf(__MODULE_NAME, message, ##__VA_ARGS__)
 
 uint32_t mb_module_count;
 char **mb_module_names;

@@ -18,7 +18,12 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 int serial_init();
 char read_serial();
-void write_serial(char a);
-void write_str_serial(const char *a);
+bool write_serial(char a);
+bool write_str_serial(const char *data);
+bool write_str_serial_strict(const char *data, size_t len);
+int write_int_serial(uint32_t n);
+int write_hex_serial(uint32_t n);

@@ -46,6 +46,8 @@ void kernel_main(uint32_t magic, uint32_t addr)
     }
     multiboot_info_t *mbi_ptr = (multiboot_info_t *)addr;
 
+    LOGF("Total memory size: %d KB", mbi_ptr->mem_upper / 1024);
+
     multiboot_module_t *module_ptr = (multiboot_module_t *)mbi_ptr->mods_addr;
     mb_module_count = mbi_ptr->mods_count;
     for (uint32_t i = 0; i < mb_module_count; i++)
