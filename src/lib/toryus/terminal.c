@@ -158,12 +158,18 @@ void terminal_putchar(char c)
     else if (c == 0x09)
     {
         cursor_x = (cursor_x + 8) & ~(8 - 1);
+#ifdef TORYUS_DEBUG
+        write_serial(c);
+#endif
     }
 
     // Handle carriage return
     else if (c == '\r')
     {
         cursor_x = 0;
+#ifdef TORYUS_DEBUG
+        write_serial(c);
+#endif
     }
 
     // Handle newline by moving cursor back to left and increasing the row
@@ -172,11 +178,18 @@ void terminal_putchar(char c)
         line_length[cursor_y] = cursor_x;
         cursor_x = 0;
         cursor_y++;
+#ifdef TORYUS_DEBUG
+        write_serial(c);
+#endif
     }
     else if (c >= 1 && c <= 31)
     {
         terminal_putchar('^');
         terminal_putchar(c + 'A' - 1);
+#ifdef TORYUS_DEBUG
+        write_serial('^');
+        write_serial(c + 'A' - 1);
+#endif
     }
     // Handle any other printable character.
     else if (c >= ' ')
@@ -184,6 +197,9 @@ void terminal_putchar(char c)
         location = buffer + (cursor_y * 80 + cursor_x);
         *location = c | attribute;
         cursor_x++;
+#ifdef TORYUS_DEBUG
+        write_serial(c);
+#endif
     }
 
     // Check if we need to insert a new line because we have reached the end
@@ -334,13 +350,15 @@ void terminal_handle_backspace()
     }
     location = buffer + (cursor_y * 80 + cursor_x);
     *location = ' ' | attribute;
+#ifdef TORYUS_DEBUG
+    write_str_serial("\b \b");
+#endif
 }
 
 int terminal_print_hex(uint32_t n)
 {
     int32_t tmp;
-    terminal_print("0x");
-    int len = 2;
+    int len = 0;
     char noZeroes = 1;
 
     int i;

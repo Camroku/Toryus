@@ -6,9 +6,15 @@ SOURCES=kernel.c $(wildcard lib/*/*.c)
 QEMUFLAGS=-drive file=Toryus.iso,format=raw,index=0,media=disk -serial file:/dev/stdout
 
 build:
+ifndef TORYUS_DEBUG
 	for file in $(SOURCES); do \
 		$(GCC) -c $$file -o `basename $$file .c`.o $(CFLAGS) ; \
 	done
+else
+	for file in $(SOURCES); do \
+		$(GCC) -c $$file -o `basename $$file .c`.o $(CFLAGS) -DTORYUS_DEBUG; \
+	done
+endif
 	$(AS) -felf32 boot.asm -o boot.o
 	$(GCC) -T link.ld -o iso/boot/toryus.bin -ffreestanding -O2 -nostdlib *.o -lgcc
 	grub-file --is-x86-multiboot iso/boot/toryus.bin

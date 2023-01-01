@@ -136,8 +136,7 @@ int write_int_serial(uint32_t n)
 int write_hex_serial(uint32_t n)
 {
     int32_t tmp;
-    write_str_serial("0x");
-    int len = 2;
+    int len = 0;
     char noZeroes = 1;
 
     int i;

@@ -216,8 +216,7 @@ void shell_line(char *line, int len)
                     "    -b: hours\n"
                     "    -C: days\n"
                     "    -c: months\n"
-                    "    -D: years\n"
-                );
+                    "    -D: years\n");
                 stat = 0;
             }
             else
@@ -249,14 +248,13 @@ void shell_line(char *line, int len)
     else if (strcmp(command, "help") == 0)
     {
         printf("Available commands:\n"
-            "    clear\t\tClear screen\n"
-            "    echo [<text>]\tPrint text\n"
-            "    stat\t\tPrints the current status\n"
-            "    uptime\t\tPrints the uptime of the system\n"
-            "    initrd\t\tPrints the initrd\n"
-            "    modules [list]\tPrints the module count\n"
-            "    help\t\tPrints this help message\n"
-        );
+               "    clear\t\tClear screen\n"
+               "    echo [<text>]\tPrint text\n"
+               "    stat\t\tPrints the current status\n"
+               "    uptime\t\tPrints the uptime of the system\n"
+               "    initrd\t\tPrints the initrd\n"
+               "    modules [list]\tPrints the module count\n"
+               "    help\t\tPrints this help message\n");
         stat = 0;
     }
     else
@@ -270,8 +268,7 @@ void shell_exec(void)
 {
     printf(
         "Toryus Shell\n"
-        "Type 'help' for a list of commands.\n"
-    );
+        "Type 'help' for a list of commands.\n");
     char theinput[129];
     int issigint;
     while (true)
