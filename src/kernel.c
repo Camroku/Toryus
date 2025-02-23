@@ -34,6 +34,9 @@
 
 MODULE("kernel");
 
+uint32_t mb_module_count = 0;
+char *mb_module_names[MAX_MODULE_COUNT] = {0};
+
 /* Toryus Kernel main function */
 void kernel_main(uint32_t magic, uint32_t addr)
 {
@@ -50,6 +53,11 @@ void kernel_main(uint32_t magic, uint32_t addr)
 
     multiboot_module_t *module_ptr = (multiboot_module_t *)mbi_ptr->mods_addr;
     mb_module_count = mbi_ptr->mods_count;
+    if (mb_module_count > MAX_MODULE_COUNT)
+    {
+        LOGF("IMPORTANT: current module count is higher than the maximum %d. ignoring the modules that exceed the max.", MAX_MODULE_COUNT);
+        mb_module_count = MAX_MODULE_COUNT;
+    }
     for (uint32_t i = 0; i < mb_module_count; i++)
     {
         mb_module_names[i] = (char *)module_ptr[i].cmdline;

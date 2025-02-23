@@ -2,3 +2,5 @@ src/Toryus.iso
 src/*.o
 src/iso/boot/toryus.bin
 .idea/*
+.vscode/*
+src/build/*

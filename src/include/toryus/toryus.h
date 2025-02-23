@@ -31,5 +31,7 @@ int logf(const char *module, const char* restrict format, ...);
 #define LOG(message) log(__MODULE_NAME, message)
 #define LOGF(message, ...) logf(__MODULE_NAME, message, ##__VA_ARGS__)
 
-uint32_t mb_module_count;
-char **mb_module_names;
+#define MAX_MODULE_COUNT 10
+
+extern uint32_t mb_module_count;
+extern char *mb_module_names[MAX_MODULE_COUNT];
